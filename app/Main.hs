@@ -50,7 +50,7 @@ hevent (EventKey (MouseButton LeftButton) Down modif (x0,y0)) (i,tree,s,x,y,mon,
   | ctrl modif == Down = (i,tree,s,x,y,True,gen)
   | otherwise          = r
   where
-    r        = if d < 0.2 then (i,change (i+1) a tree,s,x,y,False,g') else (i,tree,s,x,y,False,gen)
+    r        = if d < 0.2 then (i+1,change (i+1) a tree,s,x,y,False,g') else (i,tree,s,x,y,False,gen)
     (a,d,g') = getClosest 0 gen (drawT tree) (((x0/s) - x)/initialscale,((y0/s) - y)/initialscale)
 hevent (EventKey (MouseButton LeftButton) Up _ _) (i,tree,s,x,y,_,gen) = (i,tree,s,x,y,False,gen)
 hevent _ s = s
