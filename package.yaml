@@ -1,0 +1,31 @@
+name:                HydraGame
+version:             0.1.0.0
+license:             MIT
+author:              "Lucas Polymeris"
+maintainer:          "lucaspolymeris@protonmail.com"
+copyright:           "2021 Lucas Polymeris"
+
+extra-source-files:
+- README.md
+
+description:         Please see the README
+
+dependencies:
+- base >= 4.7 && < 5
+- containers == 0.6.2.1
+- gloss == 1.13.2.1
+- data-clist == 0.1.2.3
+
+library:
+  source-dirs: src
+
+executables:
+  hydra:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - HydraGame
