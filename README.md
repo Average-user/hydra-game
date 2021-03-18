@@ -10,3 +10,14 @@ by L. Kirby and J. Paris. A good explanation of the rules can be found
 Use arrow keys to move the selected node, keys `j,i,l,k` to translate
 the drawing, scroll to zoom in or out, and `Enter` to chop off
 one of the Hydra's heads (the node in selection).
+
+## Installation
+
+Install Haskell's tool [Stack](https://docs.haskellstack.org/en/stable/README/). Then,
+inside the repo's main folder run
+
+```
+stack setup
+stack build
+stack exec hydra
+```
