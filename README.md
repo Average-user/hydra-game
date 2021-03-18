@@ -7,9 +7,8 @@ by L. Kirby and J. Paris. A good explanation of the rules can be found
 
 ## How to use
 
-Use arrow keys to move the selected node, keys `j,i,l,k` to translate
-the drawing, scroll to zoom in or out, and `Enter` to chop off
-one of the Hydra's heads (the node in selection).
+Use `leftclick` to select a node to chop off, scroll zoom in or out, and
+`ctrl`+`leftclick` to drag the picture.
 
 ## Installation
 

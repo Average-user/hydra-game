@@ -14,7 +14,6 @@ dependencies:
 - base >= 4.7 && < 5
 - containers == 0.6.2.1
 - gloss == 1.13.2.1
-- data-clist == 0.1.2.3
 
 library:
   source-dirs: src

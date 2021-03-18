@@ -15,7 +15,3 @@ examplePaper = Node 0 [ Node 1 [ Node 2 [ Node 3 []
                                          , Node 13 []]]]
 linear 1 = Node 1 []
 linear n = Node n [linear (n-1)]
-
-leaves :: Tree a -> [a]
-leaves (Node a []) = [a]
-leaves (Node _ cs) = cs >>= leaves
