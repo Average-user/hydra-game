@@ -42,19 +42,21 @@ getDrawing poff g scale x y (Node (l,acc) st)  =
 
 draw (i,tree,s,x,y,_,gen) = Scale s s $ Translate x y $ Pictures (fst (getDrawing 0 gen initialscale 0 0 (drawT tree)))
 
-hevent (EventKey (MouseButton WheelDown) _ _ _) (i,tree,s,x,y,mon,gen) = (i,tree,s*0.95,x,y,mon,gen)
-hevent (EventKey (MouseButton WheelUp) _ _ _) (i,tree,s,x,y,mon,gen)   = (i,tree,s*1.05,x,y,mon,gen)
-hevent (EventMotion (x0,y0)) (i,tree,s,x,y,mon,gen) | mon       = (i,tree,s,x0,y0,mon,gen)
-                                                    | otherwise = (i,tree,s,x,y,mon,gen)
-hevent (EventKey (MouseButton LeftButton) Down modif (x0,y0)) (i,tree,s,x,y,mon,gen)
-  | ctrl modif == Down = (i,tree,s,x,y,True,gen)
-  | otherwise          = r
+hevent (EventKey (MouseButton WheelDown) _ _ _) (i,tree,s,x,y,desp,gen) = (i,tree,s*0.95,x,y,desp,gen)
+hevent (EventKey (MouseButton WheelUp) _ _ _) (i,tree,s,x,y,desp,gen)   = (i,tree,s*1.05,x,y,desp,gen)
+hevent (EventMotion (x1,y1)) (i,tree,s,x,y,desp,gen) =
+  case desp of
+     Just (x0,y0) -> (i,tree,s,x+(x1-x0)/s,y+(y1-y0)/s,Just (x1,y1),gen)
+     Nothing      -> (i,tree,s,x,y,desp,gen)
+hevent (EventKey (MouseButton LeftButton) Down modif (x0,y0)) (i,tree,s,x,y,desp,gen)
+  | ctrl modif == Down = (i,tree,s,x,y,Just (x0,y0),gen)
+  | d < 2.0            = (i+1,change (i+1) a tree,s,x,y,Nothing,g')
+  | otherwise          = (i,tree,s,x,y,Nothing,gen)
   where
-    r        = if d < 0.2 then (i+1,change (i+1) a tree,s,x,y,False,g') else (i,tree,s,x,y,False,gen)
     (a,d,g') = getClosest 0 gen (drawT tree) (((x0/s) - x)/initialscale,((y0/s) - y)/initialscale)
-hevent (EventKey (MouseButton LeftButton) Up _ _) (i,tree,s,x,y,_,gen) = (i,tree,s,x,y,False,gen)
+hevent (EventKey (MouseButton LeftButton) Up _ _) (i,tree,s,x,y,_,gen) = (i,tree,s,x,y,Nothing,gen)
 hevent _ s = s
 
 update _ s = s
 
-main = getStdGen >>= \gen -> play FullScreen background 0 (0,examplePaper,1,0,-300,False,gen) draw hevent update
+main = getStdGen >>= \gen -> play FullScreen background 0 (0,examplePaper,1,0,-300,Nothing,gen) draw hevent update
