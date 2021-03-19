@@ -13,8 +13,8 @@ import Trees
 
 background   = black
 maincolor    = aquamarine
-selected     = orange
-initialscale = 50
+leavecolor   = orange
+initialscale = 70
 offrange     = (-0.32,0.32) :: (Float,Float) -- Both should be smaller (in absolute value) than .4
 
 getClosest :: Float -> StdGen -> Tree (a,Float) -> (Float,Float) -> (a,Float,StdGen)
@@ -37,7 +37,9 @@ getDrawing poff g scale x y (Node (l,acc) st)  =
                    in (ps++ps',g')
     x'       = x+acc
     (off,g') = randomR offrange g
-    node     = Translate (scale*(x'+poff)) (scale*y) (Color maincolor (circleSolid 4))
+    pics     = if st == [] then [Color maincolor (ThickCircle 3 1),Color leavecolor (circleSolid 3)]
+                           else [Color maincolor (circleSolid 4)]
+    node     = Translate (scale*(x'+poff)) (scale*y) (Pictures pics)
     lines    = map (\(Node (_,acc') _) -> Color maincolor $ Line [(scale*(x'+poff),scale*y), (scale*(x'+acc'+off), scale*(y+1))]) st
 
 draw (i,tree,s,x,y,_,gen) = Scale s s $ Translate x y $ Pictures (fst (getDrawing 0 gen initialscale 0 0 (drawT tree)))
@@ -50,7 +52,7 @@ hevent (EventMotion (x1,y1)) (i,tree,s,x,y,desp,gen) =
      Nothing      -> (i,tree,s,x,y,desp,gen)
 hevent (EventKey (MouseButton LeftButton) Down modif (x0,y0)) (i,tree,s,x,y,desp,gen)
   | ctrl modif == Down = (i,tree,s,x,y,Just (x0,y0),gen)
-  | d < 2.0            = (i+1,change (i+1) a tree,s,x,y,Nothing,g')
+  | d < 0.2            = (i+1,change (i+1) a tree,s,x,y,Nothing,g')
   | otherwise          = (i,tree,s,x,y,Nothing,gen)
   where
     (a,d,g') = getClosest 0 gen (drawT tree) (((x0/s) - x)/initialscale,((y0/s) - y)/initialscale)
