@@ -1,5 +1,7 @@
 # HydraGame
 
+![](sample.png)
+
 Implementation of the Hydra Game described in the paper
 _Accessible independence results for Peano Arithmetic_
 by L. Kirby and J. Paris. A good explanation of the rules can be found
