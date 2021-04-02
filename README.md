@@ -8,7 +8,7 @@ by L. Kirby and J. Paris. A good explanation of the rules can be found
 ## How to use
 
 Use `leftclick` to select a node to chop off, scroll to zoom in or out, and
-`ctrl`+`leftclick` to drag the picture.
+`leftclick+drag` to translate the picture.
 
 ## Installation
 

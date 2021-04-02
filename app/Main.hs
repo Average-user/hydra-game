@@ -50,10 +50,9 @@ hevent (EventMotion (x1,y1)) (i,tree,s,x,y,desp,gen) =
   case desp of
      Just (x0,y0) -> (i,tree,s,x+(x1-x0)/s,y+(y1-y0)/s,Just (x1,y1),gen)
      Nothing      -> (i,tree,s,x,y,desp,gen)
-hevent (EventKey (MouseButton LeftButton) Down modif (x0,y0)) (i,tree,s,x,y,desp,gen)
-  | ctrl modif == Down = (i,tree,s,x,y,Just (x0,y0),gen)
-  | d < 0.2            = (i+1,change (i+1) a tree,s,x,y,Nothing,g')
-  | otherwise          = (i,tree,s,x,y,Nothing,gen)
+hevent (EventKey (MouseButton LeftButton) Down _ (x0,y0)) (i,tree,s,x,y,desp,gen)
+  | d < 0.2   = (i+1,change (i+1) a tree,s,x,y,Nothing,g')
+  | otherwise = (i,tree,s,x,y,Just (x0,y0),gen)
   where
     (a,d,g') = getClosest 0 gen (drawT tree) (((x0/s) - x)/initialscale,((y0/s) - y)/initialscale)
 hevent (EventKey (MouseButton LeftButton) Up _ _) (i,tree,s,x,y,_,gen) = (i,tree,s,x,y,Nothing,gen)
