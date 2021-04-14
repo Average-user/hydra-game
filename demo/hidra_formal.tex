@@ -1,0 +1,270 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{latexsym}               % agrega algunos símbolos
+\usepackage{amssymb}                % símbolos especiales
+\usepackage{amsmath, amsthm}
+\usepackage{hyperref}
+\usepackage{ccfonts}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{verbatim}
+\usepackage[margin=1.5in]{geometry}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=magenta,
+}
+\setlength{\parindent}{0pt}
+\titleformat*{\section}{\large\centering}
+
+\newcommand{\seb}{\subseteq}
+\newcommand{\sqsm}{\sqsubset}
+\newcommand{\bac}{\backslash}
+\newcommand{\matN}{\mathbb{N}}
+\newcommand{\matR}{\mathbb{R}}
+\newcommand{\sep}{\;|\;}
+\newcommand{\nR}{\!\!\not\mathrel{R}\!\!}
+\newcommand{\nH}{\!\not\mathrel{H}\!}
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mH}{\mathcal{H}}
+\newcommand{\lag}{\langle}
+\newcommand{\rag}{\rangle}
+
+\setlength{\droptitle}{-10em}
+
+\theoremstyle{definition}
+\newtheorem{corolary}{Corolario}
+\newtheorem{lemma}{Lema}
+\newtheorem{proposition}{Proposición}
+\newtheorem{theorem}{Teorema}
+\newtheorem{example}{Ejemplo}
+\newtheorem{definition}{Definición}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\title{Demostración formal de la terminación del Juego de la Hidra.}
+\author{Lucas Polymeris}
+
+\begin{document}
+\maketitle
+
+Asumimos familiaridad con las reglas del {\em Juego de la Hidra},
+introducido por L. Kirby y J. Paris en \cite{hydra}. En el siguiente
+\href{https://slate.com/human-interest/2014/06/hydra-game-an-example-of-a-counterintuitive-mathematical-result.html}{enlace}
+se puede encontrar una buena explicación de estas. También
+se puede jugar al juego con el \href{https://github.com/Average-user/hydra-game#readme}{programa} del autor. Adoptamos la notación
+(como es usual en combinatoria) de representar el conjunto $\{1,2,\dots,n\}$
+por $[n]$.\\
+
+La estrategia para la demostración es como sigue. Primero formalizamos la noción
+de árbol ``plantado'', definimos un orden sobre estos, y definimos las
+hidras como representantes de la clase de isomorfismos de estos árboles. Mostramos que
+este orden restringido a las hidras es {\em bien fundado}, es decir, que toda sucesión estrictamente
+decreciente de hidras debe ser finita, así como en $\matN$, y como no
+es el caso en $\mathbb{Q}_{\geq 0}$. Por último, mostramos que si $\alpha'$ es una hidra producida
+por una jugada válida desde $\alpha$, entonces $\alpha' < \alpha$. Concluyendo
+entonces, que si se sigue jugando, siempre llegará un momento en el que
+se llegue a la hidra de solo un nodo, donde no hay jugada posible.
+
+\begin{definition}
+  Definimos un árbol ``plantado'' finito inductivamente como sigue:
+  \begin{itemize}
+  \itemsep0em
+  \item $\lag\rag$ es el árbol de solo un nodo.
+  \item Si $t_1,\dots,t_n$ son árboles plantados, entonces $\lag t_1,\dots,t_n\rag$ es un árbol-plantado.
+    Decimos que $t_1,\dots,t_n$ son los sub-árboles directos de $\lag t_1,\dots,t_n \rag$.
+  \end{itemize}
+  Consideramos $\mathcal{A}$ el conjunto de todos los árboles finitos, y si
+  $\alpha \in \mA$ con $\alpha = \lag t_1,\dots,t_n \rag$ entendemos
+   $\alpha[i] = t_i$.
+\end{definition}
+
+\begin{definition}
+  Definimos el orden $(\mA,\leq)$ recursivamente. Sean $\alpha,\beta \in \mA$,
+  con $\alpha = \lag a_1,\dots,a_p \rag$ y $\beta = \lag b_1,\dots,b_q \rag$. Considere
+  $$I := \{i \in [\min\{p,q\}] : a_i \neq b_i\}$$ Si $p \leq q$ e $I$ es vacío,
+  entonces definimos $\alpha \leq \beta$.
+  Si $I$ es no vacío, sea $i_0 := \min(I)$, luego $\alpha \leq \beta$ si
+  $a_{i_0} < b_{i_0}$.
+\end{definition}
+
+Es claro que en $\mA$ hay muchas copias de un ``mismo'' árbol en el sentido de isomorfismo. Por ejemplo los
+árboles $\lag\lag\rag,\lag\lag\rag,\lag\rag\rag\rag$ y $\lag\lag\lag\rag,\lag\rag\rag,\lag\rag\rag$ son isomorfos,
+sin embargo, bajo el orden definido tenemos
+$\lag\lag\rag,\lag\lag\rag,\lag\rag\rag\rag < \lag\lag\lag\rag,\lag\rag\rag,\lag\rag\rag$, lo cual causaría
+problemas más adelante. Además, es claro
+que en lo que al juego de la hidra respecta, dos árboles isomorfos son la ``misma'' hidra.
+En esencia, nos gustaría que las hidras
+sean los representantes de la clase de isomorfismo, que tienen sus hijos ordenados
+de mayor a menor según el orden definido, los hijos de hijos también y así. Lo
+cual nos lleva a la siguiente definición.
+
+\begin{definition}
+  Definimos las hidras recursivamente.
+  \begin{itemize}
+    \itemsep0em
+    \item $\lag\rag$ es la hidra de solo un nodo.
+    \item Si $r_1,\dots,r_n$ son hidras tal que $r_1 \geq \dots \geq r_n$, entonces
+      $\lag r_1,\dots,r_n \rag$ es una hidra.
+  \end{itemize}
+  Llamamos por $\mH$ el conjunto de todas las hidras, donde es claro que $\mH \seb \mA$.\\
+  Llamamos a los sub-árboles directos de una hidra, sus hijos. Además
+  definimos la altura $h(\alpha)$ de una hidra $\alpha$, como la
+  cantidad de paréntesis izquierdos al comienzo de $\alpha$, antes de encontrarse
+  con uno derecho.
+\end{definition}
+
+Debiera ser claro de esta definición, que para todo árbol existe
+una hidra isomorfa a este, y que por lo tanto, no nos ``faltan'' hidras por
+considerar.
+\begin{comment}
+\begin{lemma}
+  Si $\alpha$ y $\beta$ son hidras tal que $h(\alpha) < h(\beta)$, entonces
+  $\alpha < \beta$.
+\end{lemma}
+\begin{proof}
+  Procedemos por inducción sobre $h(\alpha)$.\\
+  $h(\alpha) = 1 \Rightarrow \alpha = \lag\rag$ y el lema se cumple. Asuma
+  $h(\alpha) > 1$ y que el lema se cumple para $h(\alpha)-1$. Luego
+  $\alpha = \lag a_1,\dots,a_p\rag$ y $\beta = \lag b_1,\dots,b_q\rag$, donde
+  por definición de altura es claro que $h(a_1) = h(\alpha)-1 < h(\beta)-1 = h(b_1)$ y por
+  lo tanto, por hipótesis de inducción $a_1 < b_1 \Rightarrow \alpha < \beta$.
+\end{proof}
+\end{comment}
+\begin{lemma}
+  Sea $(\alpha_i)_{i \in \matN}$ una sucesión de hidras tal que
+  $$
+  \alpha_1 \geq \alpha_2 \geq \dots
+  $$
+  luego debe ser que $\alpha$ se estabiliza. Es decir, existe $i_0$ tal
+  que $\alpha_{i_0} = \alpha_{i_0 + k}$ para todo $k \in \matN$.
+\end{lemma}
+\begin{proof}
+  Procedemos por inducción sobre $H := \min\{h(\alpha_i) : i \in \matN\}$. Si
+  $H = 1$, debe ser que $\alpha_1= \lag\rag$, y en consecuencia la sucesión se estabiliza
+  en $\alpha_1$.\\
+  Suponga que $H>1$ y suponga que el lema se cumple para valores menores a $H$.
+  Como $H>1$, $\lag\rag$ no aparece en la sucesión y por lo tanto
+  $$
+  f_{1}(i) := \alpha_i[1]
+  $$
+  es bien definida ya que todo $\alpha_i$ tiene al menos un hijo. Además
+  es claro que $h(f_1(i)) = h(\alpha_i) - 1$. Por lo tanto, por hipótesis de inducción
+  $f_1$ se estabiliza, es decir, existe $t_1$ tal que para todos excepto finitos
+  de los naturales $i$ se tiene $f_1(i) = t_1$. Esto implica que para estos $i$
+  $$
+  \alpha_i = \lag t_1,\dots,t_1,r_i,r_{i+1}\dots\rag
+  $$
+  Es decir, que $\alpha_i$ comienza con una ``tira'' de $t_1$'s. De todos estos
+  $\alpha_i$, sea $K$ el largo de la tira de $t_1$'s más corta. Si fuera
+  que para algún $i$, $\alpha_i$ consiste exactamente de esta tira de $t_1$'s de
+  largo $K$, entonces es claro que $\alpha$ se estabiliza en tal $\alpha_i$ y el
+  lema vale. Llamamos a este caso $(\ast)$.\\
+  Si no, debe ser que a partir de cierto $i_1$, todos los $\alpha_i$, tienen
+  un termino además de la tira de $t_1$'s de largo $K$, y por lo tanto la función
+  $$
+  f_2(i) = \alpha_{i_1 + i}[K+1]
+  $$
+  es bien definida. Es claro además, que para todo $i$, $h(f_2(i)) \leq h(t_1) < H$,
+  y que por lo tanto, $f_2$ se estabiliza en algún valor $t_2$. Además,por construcción
+  debe ser que $t_2 < t_1$.
+  Iterando este proceso, formamos una sucesión de hidras
+  $$
+  t_1 > t_2 > \dots
+  $$
+  que por hipótesis de inducción debe estabilizarse. Pero esto no es posible, ya que
+  cada término es estrictamente menor que el anterior, concluyendo que la sucesión
+  debe ser finita. Como la única posibilidad de que no se pueda construir $t_{i+1}$
+  es que en $t_i$ se de el caso $(\ast)$, concluimos que este debe darse para algún $i$,
+  completando la demostración del lema.
+\end{proof}
+
+\begin{corolary}
+  $(\mH,\leq)$ es un orden bien fundado.
+\end{corolary}
+
+Todavía no queda claro, en esta forma de representar una
+hidra, cuales son las ``cabezas'' de esta. Para definir esto, nos
+apoyamos en el hecho de que en un árbol plantado, existe un único
+camino de la raíz a cada hoja. Lo cual motiva la siguiente definición.
+
+\begin{definition}
+  Dado $\alpha \in \mH$, decimos que $(x_0,x_1,\dots,x_n)$ es la
+  dirección de una cabeza de $\alpha$ si es tal que
+  $x_0 = \alpha$, $x_n = \lag\rag$, y para todo
+  $i \in [n]$ se tiene que $x_{i}$ es hijo $x_{i-1}$. Decimos entonces
+  que la cabeza representada tiene profundidad $n$.
+\end{definition}
+
+Nos gustaría definir el conjunto $R(\alpha)$ de las hidras
+que pueden resultar de una jugada válida desde $\alpha$, sin embargo,
+estas dependen de en que ``fase'' esté el juego, es decir, de cuantos
+turnos hayan pasado. Sin embargo, esto no es problema, ya que podemos
+simplemente considerar $R(\alpha)$ como la unión de las hidras
+que resultan de $\alpha$ en un turno $i$ para todo $i \in \matN$. Esto
+nos lleva a la siguiente definición.
+
+\begin{definition}
+  Dado $\alpha \in \mH$, denotamos por $R(\alpha)$ el conjunto
+  de hidras que se pueden alcanzar desde $\alpha$ mediante a una
+  jugada del Juego de la Hidra, para alguna fase $i \in \matN$. Note
+  que sigue de las reglas del juego que $R(\lag\rag) = \{\lag\rag\}$.
+\end{definition}
+
+\begin{lemma}
+  Si $\alpha \in \mH \setminus \{\lag\rag\}$, $\alpha' \in R(\alpha) \Rightarrow \alpha' < \alpha$.
+\end{lemma}
+\begin{proof}
+  Procedemos por inducción por sobre la profundidad $p$ de la cabeza cortada. Si
+  $p=1$, entonces la cabeza tiene dirección $(\alpha,\lag\rag)$ y en consecuencia
+  $\alpha = \lag a_1,\dots,a_n,\lag\rag\rag$, para algunos $a_1,\dots,a_n \in \mH$,
+  luego, por las reglas del juego $\alpha' = \lag a_1,\dots,a_n \rag < \alpha$.\\ Si
+  $p=2$, la dirección es de la forma $(\alpha,x,\lag\rag)$, y por lo tanto $x$
+  debe ser de la forma $\lag s_1,\dots,s_r,\lag\rag\rag$ y $\alpha$  de la forma
+  $$
+  \lag a_1,\dots,a_{i-1},\underbrace{x,\dots,x}_{k \text{ veces}},a_{i},\dots,a_n\rag
+  $$
+  y en consecuencia $\alpha'$ es de la forma
+  $$
+  \lag a_1,\dots,a_{i-1},\underbrace{x,\dots,x}_{k-1 \text{ veces}},y,\dots\rag
+  $$
+  donde $y$ es o bien una de las muchas
+  copias de $\lag s_1,\dots,s_r\rag$, o $a_{j}$ con $i \leq j \leq n$. En cualquier
+  caso $y < x$ y concluimos $\alpha' < \alpha$.\\
+  Luego, suponga $p > 2$ y que el lema se cumple para $p-1$. Luego, debe
+  ser que la dirección es de la forma $(\alpha,x_1,x_2,\dots,x_p)$ y entonces
+  $\alpha$ es de la forma
+  $$
+  \lag a_1,\dots,a_{i-1},\underbrace{x_1,\dots,x_1}_{k \text{ veces}},a_{i},\dots,a_n\rag
+  $$
+   y como $p\geq 3$ se sigue por reglas del juego, que $\alpha'$ debe ser de la forma
+  $$
+  \lag a_1,\dots,a_{i-1},\underbrace{x_1,\dots,x_1}_{k-1 \text{ veces}},y,\dots\rag
+  $$
+  donde o bien $y = x_1'$, el resultado de cortar la cabeza con dirección $(x_1,\dots,x_p)$ de $x_1$,
+  que como esta tiene profundidad $p-1$, se sigue por hipótesis de inducción
+  que $x_1' < x_1$, y por lo tanto $\alpha' < \alpha$. O $ y = a_{j}$ con
+  $i \leq j \leq n$, también concluyendo $\alpha' < \alpha$.
+\end{proof}
+
+\begin{theorem}
+  Cualquier estrategia del Juego de la Hidra es ganadora.
+\end{theorem}
+\begin{proof}
+  Sigue de los lemas anteriores.
+\end{proof}
+
+
+\bibliographystyle{abbrv}
+\bibliography{refs}
+
+\end{document}
