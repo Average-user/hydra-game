@@ -15,3 +15,6 @@ examplePaper = Node 0 [ Node 6 [ Node 10 [ Node 11 []
                                         , Node 4 []]]]
 linear 1 = Node 1 []
 linear n = Node n [linear (n-1)]
+
+simpleExample :: Tree Int
+simpleExample = Node 0 [Node 1 [],Node 2 [Node 3 [], Node 4 [ Node 5 []]]]
